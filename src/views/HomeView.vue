@@ -25,7 +25,11 @@
       <h1 class="title text-dark font-bold text-xl">Testlar</h1>
       <div class="subjects grid grid-cols-auto gap-12 my-4">
         <router-link
-          to="#"
+          :to="
+            subject.active
+              ? `/test?subject=${subject.name}&pupil=${user.fullname}`
+              : '#' + subject.id
+          "
           :class="[
             subject.active ? 'border-green' : 'border-gray',
             'subject relative border-[4px] rounded-md h-[230px] flex justify-center items-center',
@@ -33,7 +37,6 @@
           v-for="(subject, index) in subjects"
           :key="subject.id"
         >
-          <!-- subject-id absolute -top-3 bg-green -left-3 text-white px-3 py-[1.5px] rounded-full font-bold -->
           <p
             :class="[
               subject.active ? 'bg-green' : 'bg-gray',
@@ -42,7 +45,14 @@
           >
             0{{ index + 1 }}
           </p>
-          <h2 class="subject-name">{{ subject.name }}</h2>
+          <h2
+            :class="[
+              subject.active ? 'text-green' : 'text-gray',
+              'text-2xl font-bold',
+            ]"
+          >
+            {{ subject.name }}
+          </h2>
         </router-link>
       </div>
     </main>
