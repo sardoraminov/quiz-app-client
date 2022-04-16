@@ -9,28 +9,40 @@
       <div class="inputs">
         <input
           v-model="user.firstname"
-          class="mx-3 py-2 px-4 rounded-md outline-none text-white placeholder:text-[#D7F2FA] bg-transparent border-white border-2"
+          class="mx-3 py-2 px-4 rounded-md outline-none text-white placeholder:text-[#D7F2FA] bg-transparent border-white border-2 my-2"
           type="text"
           placeholder="Ism"
         />
         <input
           v-model="user.lastname"
-          class="mx-3 py-2 px-4 rounded-md outline-none text-white placeholder:text-[#D7F2FA] bg-transparent border-white border-2"
+          class="mx-3 py-2 px-4 rounded-md outline-none text-white placeholder:text-[#D7F2FA] bg-transparent border-white border-2 my-2"
           type="text"
           placeholder="Familiya"
         />
       </div>
     </div>
-    <main class="subjects-box p-4">
+    <main class="subjects-box py-6 px-7">
       <h1 class="title text-dark font-bold text-xl">Testlar</h1>
-      <div class="subjects grid grid-cols-auto">
-        <router-link to="#"
-          class="subject my-4 border"
+      <div class="subjects grid grid-cols-auto gap-12 my-4">
+        <router-link
+          to="#"
+          :class="[
+            subject.active ? 'border-green' : 'border-gray',
+            'subject relative border-[4px] rounded-md h-[230px] flex justify-center items-center',
+          ]"
           v-for="(subject, index) in subjects"
           :key="subject.id"
         >
-            <p class="subject-id">0{{ index + 1 }}</p>
-            <h2 class="subject-name">{{ subject.name }}</h2>
+          <!-- subject-id absolute -top-3 bg-green -left-3 text-white px-3 py-[1.5px] rounded-full font-bold -->
+          <p
+            :class="[
+              subject.active ? 'bg-green' : 'bg-gray',
+              'subject-id font-bold absolute -top-3  -left-3 text-white px-3 py-[1.5px] rounded-full',
+            ]"
+          >
+            0{{ index + 1 }}
+          </p>
+          <h2 class="subject-name">{{ subject.name }}</h2>
         </router-link>
       </div>
     </main>
