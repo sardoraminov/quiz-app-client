@@ -9,7 +9,7 @@ module.exports = {
       colors: {
         green: "#9BC53D",
         blue: "#54C6EB",
-        gray: "#E2E2E2",
+        gray: "#D7D7D7",
         dark: "#202020",
       },
       gridTemplateColumns: {
@@ -17,7 +17,7 @@ module.exports = {
       },
       gridTemplateRows: {
         auto: "repeat(auto-fill, minmax(200px, 1fr))",
-      }
+      },
     },
   },
   plugins: [],

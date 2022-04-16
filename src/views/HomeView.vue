@@ -1,7 +1,7 @@
 <template>
   <div class="start-page min-h-screen">
     <div
-      class="register-form flex flex-col justify-evenly bg-blue min-h-[220px] text-center"
+      class="register-form flex flex-col justify-evenly bg-blue min-h-[220px] text-center pb-4"
     >
       <span class="logo text-white font-light"
         >livecoders <b class="font-extrabold text-xs">TM</b></span
@@ -23,7 +23,7 @@
     </div>
     <main class="subjects-box py-6 px-7">
       <h1 class="title text-dark font-bold text-xl">Testlar</h1>
-      <div class="subjects grid grid-cols-auto gap-12 my-4">
+      <div class="subjects grid grid-cols-auto gap-12 my-4 mt-11">
         <router-link
           :to="
             subject.active
@@ -32,7 +32,7 @@
           "
           :class="[
             subject.active ? 'border-green' : 'border-gray',
-            'subject relative border-[4px] rounded-md h-[230px] flex justify-center items-center',
+            'subject relative border-[5px] rounded-md h-[230px] flex justify-center items-center',
           ]"
           v-for="(subject, index) in subjects"
           :key="subject.id"
@@ -54,6 +54,16 @@
             {{ subject.name }}
           </h2>
         </router-link>
+      </div>
+      <div class="reminder mt-12">
+        <div class="box flex flex-row items-center my-2">
+          <div class="something available bg-green w-5 h-5 mr-2"></div>
+          - Mavjud
+        </div>
+        <div class="box flex flex-row items-center my-2">
+          <div class="something available bg-gray w-5 h-5 mr-2"></div>
+          - Mavjud emas
+        </div>
       </div>
     </main>
   </div>
