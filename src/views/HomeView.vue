@@ -21,10 +21,15 @@
         />
       </div>
     </div>
-    <main class="subjects-box py-6 px-7">
+    <div class="text-center my-6 text-lg mt-8" v-if="user.firstname.length < 2 || user.lastname.length < 5">
+      Ism familiyangizni to'liq yozing!
+    </div>
+    <main v-else class="subjects-box py-6 px-7">
       <h1 class="title text-dark font-bold text-xl">Testlar</h1>
-      <div class="subjects grid grid-cols-auto gap-12 my-4 mt-11">
+      <div class="subjects grid grid-cols-auto relative gap-12 my-4 mt-11">
         <router-link
+          v-for="(subject, index) in subjects"
+          :key="subject.id"
           :to="
             subject.active
               ? `/test?subject=${subject.name}&pupil=${user.fullname}`
@@ -34,8 +39,6 @@
             subject.active ? 'border-green' : 'border-gray',
             'subject relative border-[5px] rounded-md h-[230px] flex justify-center items-center',
           ]"
-          v-for="(subject, index) in subjects"
-          :key="subject.id"
         >
           <p
             :class="[
@@ -70,7 +73,7 @@
 </template>
 
 <script>
-import { computed, reactive, watch } from "vue";
+import { computed, reactive, ref } from "vue";
 export default {
   name: "Home",
   setup() {
@@ -79,6 +82,8 @@ export default {
       lastname: "",
       fullname: computed(() => `${user.firstname} ${user.lastname}`),
     });
+
+    const isFullname = ref(user.fullname.length > 2 ? true : false);
 
     const subjectsArr = [
       { id: 1, name: "Tarix", active: false },
@@ -91,16 +96,10 @@ export default {
     );
     const subjects = reactive(sortedSubjects);
 
-    watch(
-      () => user.fullname,
-      (newValue) => {
-        console.log(newValue);
-      }
-    );
-
     return {
       user,
       subjects,
+      isFullname,
     };
   },
 };
