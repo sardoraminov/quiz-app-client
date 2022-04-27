@@ -13,7 +13,7 @@ module.exports = {
         dark: "#202020",
       },
       gridTemplateColumns: {
-        auto: "repeat(auto-fit, minmax(200px, 1fr))",
+        auto: "repeat(auto-fit, minmax(220px, 1fr))",
       },
       gridTemplateRows: {
         auto: "repeat(auto-fill, minmax(200px, 1fr))",

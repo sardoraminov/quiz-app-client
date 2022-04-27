@@ -28,7 +28,7 @@ export default createStore({
     async fetchExams({ commit }, payload) {
       commit("setLoading", true);
       try {
-        const response = await api.get(`/exams`);
+        const response = await api.get(`/subjects`);
         commit("setExams", response.data);
         commit("setLoading", false);
         console.log(response.data);
