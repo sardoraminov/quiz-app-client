@@ -11,6 +11,7 @@ module.exports = {
         blue: "#54C6EB",
         gray: "#D7D7D7",
         dark: "#202020",
+        red: "#FF7272",
       },
       gridTemplateColumns: {
         auto: "repeat(auto-fit, minmax(220px, 1fr))",

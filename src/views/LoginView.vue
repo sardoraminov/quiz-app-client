@@ -7,15 +7,17 @@
         <h1 class="box-title text-2xl font-bold">Kirish</h1>
         <p class="authors text-sm opacity-50">livecoders <b>TM</b></p>
       </div>
+      <p class="error text-sm mb-2" v-if="err.isErr">{{ err.msg }}</p>
       <input
         v-model="id"
-        class="user-id border-2 border-gray outline-none px-3 py-1 rounded"
+        class="user-id border-2 border-gray outline-none px-3 py-1 rounded transition-all focus:border-blue"
         placeholder="ID ni kiriting"
         type="text"
       />
       <button
+        :disabled="disableBtn"
         @click="login()"
-        class="login-btn transition-all hover:shadow my-3 p-2 rounded bg-blue text-white"
+        class="login-btn transition-all hover:shadow my-3 p-2 rounded bg-blue text-white disabled:bg-gray"
       >
         KIRISH
       </button>
@@ -24,24 +26,42 @@
 </template>
 
 <script>
+import { reactive, ref } from "vue";
+import { api } from "@/plugins/api";
+import Cookie from "js-cookie";
+import { useRouter } from "vue-router";
 export default {
   name: "Login",
-  data() {
-    return {
-      id: "",
-    };
-  },
-  methods: {
-    async login() {
-      if (this.id.length < 1) {
-        this.$toast.open({
-          message: "Idni kiriting!",
-          type: "warning",
-          position: "top",
-          duration: 3000,
-        });
+  setup() {
+    const router = useRouter();
+    let id = ref("");
+    let err = reactive({
+      isErr: false,
+      msg: "",
+    });
+    let disableBtn = ref(false);
+
+    const login = async () => {
+      try {
+        disableBtn.value = true;
+        const resp = await api.post("/users/login", { oneId: id.value });
+        if (resp.data.status === "bad") {
+          disableBtn.value = false;
+          err.isErr = true;
+          err.msg = resp.data.msg;
+        } else {
+          err.isErr = false;
+          err.msg = "";
+          Cookie.set("auth_token", resp.data.auth_token);
+          Cookie.set("user", JSON.stringify(resp.data.user));
+          disableBtn.value = false;
+          router.push("/discover");
+        }
+      } catch (error) {
+        console.log(error.message);
       }
-    },
+    };
+    return { id, disableBtn, err, login };
   },
 };
 </script>
