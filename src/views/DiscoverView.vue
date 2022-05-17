@@ -94,6 +94,7 @@
 </template>
 
 <script>
+import { api } from "../plugins/api";
 import { ref, reactive, onBeforeMount, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -110,33 +111,6 @@ export default {
 
     let user = reactive(JSON.parse(Cookie.get("user")));
 
-    // {
-    //   oneId: "987ygMat8",
-    //   name: "Matematika",
-    //   classNum: "8",
-    //   pupils: 0,
-    //   timeOut: 7200000,
-    //   timeOutOriginal: "00:02:00",
-    //   finished: false,
-    // },
-    // {
-    //   oneId: "987ygMat8",
-    //   name: "Matematika",
-    //   classNum: "8",
-    //   pupils: 0,
-    //   timeOut: 7200000,
-    //   timeOutOriginal: "00:02:00",
-    //   finished: false,
-    // },
-    // {
-    //   oneId: "987ygMat8",
-    //   name: "Matematika",
-    //   classNum: "8",
-    //   pupils: 0,
-    //   timeOut: 7200000,
-    //   timeOutOriginal: "00:02:00",
-    //   finished: false,
-    // },
     let exams = reactive(store.state.exams);
 
     let search = ref("");
@@ -147,21 +121,39 @@ export default {
       loading.value = true;
       store.dispatch("fetchExams").then(() => {
         loading.value = false;
-        exams = store.state.exams
+        exams = store.state.exams;
       });
     };
 
     const enterExam = async (id) => {
       disableBtn.value = true;
-      store.dispatch("enterExam", id).then(() => {
-        disableBtn.value = false;
+      let cookieAvailable = Cookie.get("exam_token") ? true : false;
+      api
+        .get(`/users/enterexam/${id}`, {
+          headers: {
+            "Exam-token": cookieAvailable ? Cookie.get("exam_token") : "",
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          Cookie.set("exam", JSON.stringify(res.data));
+          Cookie.set("exam_token", res.data.exam_token);
+          api
+            .put(`/users/${user.oneId}/active`, {
+              examName: `${res.data.examName}`,
+              examClassNum: res.data.examClassNum,
+            })
+            .then((res) => {
+              console.log(res.data);
+              Cookie.remove("user");
 
-        if (Cookie.get("exam_token")) {
-          router.push({ name: "Exam", params: { id: id } });
-        } else {
-          return;
-        }
-      });
+              Cookie.set("user", JSON.stringify(res.data.user));
+            });
+        })
+        .then(() => {
+          window.location.href = `/exam/${id}`;
+          disableBtn.value = false;
+        });
     };
 
     const calculateTime = async () => {
@@ -176,9 +168,17 @@ export default {
       }, 1000);
     };
 
+    const getUser = async () => {
+      api.get(`/users/${user.oneId}`).then((res) => {
+        Cookie.set("user", JSON.stringify(res.data));
+        console.log(res.data);
+      });
+    };
+
     onBeforeMount(() => {
       getExams();
       calculateTime();
+      getUser();
     });
 
     let filteredList = computed(() => {

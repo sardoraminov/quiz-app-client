@@ -53,6 +53,7 @@ export default {
           err.isErr = false;
           err.msg = "";
           Cookie.set("auth_token", resp.data.auth_token);
+          Cookie.set("user_oneId", resp.data.user.oneId);
           Cookie.set("user", JSON.stringify(resp.data.user));
           disableBtn.value = false;
           router.push("/discover");

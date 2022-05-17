@@ -38,19 +38,7 @@ export default createStore({
         console.log(error);
       }
     },
-    async enterExam({ commit }, payload) {
-      commit("setLoading", true);
-      try {
-        const resp = await api.get(`/users/enterexam/${payload.oneId}`);
-        commit("setCurrentExam", resp.data);
-        commit("setLoading", false);
-        Cookies.set("exam_token", resp.data.exam_token, { expires: "1d" });
-        console.log(resp.data);
-      } catch (error) {
-        commit("setLoading", false);
-        console.log(error);
-      }
-    },
+    
   },
   modules: {},
 });

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import ExamView from "../views/ExamView.vue";
 import LoginView from "../views/LoginView.vue";
 import Cookie from "js-cookie";
+  
 const routes = [
   {
     path: "/",
@@ -39,17 +40,21 @@ router.beforeEach((to, from, next) => {
   } else if (to.name === "discover") {
     if (!Cookie.get("auth_token")) {
       router.push({ name: "login" });
+    } else if (Cookie.get("exam")) {
+      window.location.href = `/exam/${JSON.parse(Cookie.get("exam")).examId}`;
     } else {
       next();
     }
   } else if (to.name === "exam") {
     if (!Cookie.get("auth_token")) {
       router.push({ name: "login" });
-    } else if (!Cookie.get("exam_token")) {
+    } else if (!Cookie.get("exam")) {
       router.push({ name: "discover" });
+    } else {
+      next();
     }
   } else {
-    next()
+    next();
   }
 });
 
