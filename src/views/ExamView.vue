@@ -14,17 +14,20 @@
         {{ convertMsToTime(exam.examTimeOut) }}
       </p>
     </div>
-    <div class="user">
+    <button
+      :disabled="loading"
+      class="refresh-btn disabled:bg-gray btn text-white bg-blue rounded px-3 py-2 transition-all hover:shadow-lg mb-6"
+      @click="getExam()"
+    >
+      {{ loading ? "" : "Yangilash" }}
+      <ion-icon name="refresh-outline" class="text-base"></ion-icon>
+    </button>
+    <div class="user mb-4">
       <p>
         Sizning ID: <b>{{ user.oneId }}</b>
       </p>
     </div>
-    <button
-      @click="leaveExam()"
-      class="btn bg-red text-white rounded px-3 py-2"
-    >
-      Chiqish
-    </button>
+
     <button
       v-show="scY"
       @click="toTop()"
@@ -32,12 +35,75 @@
     >
       <ion-icon name="chevron-up-outline" class="mt-1 text-white"></ion-icon>
     </button>
+    <div class="exam-questions flex flex-col">
+      <h1 class="text-2xl font-bold">Savollar</h1>
+      <div
+        v-for="(question, index) in exam.examQuestions"
+        :key="index"
+        class="exam-question border-b border-gray py-2 pb-8 my-8 font-roboto"
+      >
+        <h2 class="question-title text-xl mb-4">
+          <b>{{ index + 1 }}.</b> {{ question.question }}
+        </h2>
+        <div class="exam-options space-y-4 flex flex-col items-start">
+          <div class="option flex flex-row items-center">
+            <input
+              type="radio"
+              :name="`answer-for-${index + 1} question`"
+              :value="question.optionA"
+              v-model="pupilAnswers[index].pupilAnswer"
+              @change="changePupilAnswer(index, question.optionA)"
+              :checked="question.optionA === pupilAnswers[index].pupilAnswer"
+            />
+            <p class="ml-2">{{ question.optionA }}</p>
+          </div>
+          <div class="option flex flex-row items-center">
+            <input
+              type="radio"
+              :name="`answer-for-${index + 1} question`"
+              :value="question.optionB"
+              v-model="pupilAnswers[index].pupilAnswer"
+              @change="changePupilAnswer(index, question.optionB)"
+              :checked="question.optionB === pupilAnswers[index].pupilAnswer"
+            />
+            <p class="ml-2">{{ question.optionB }}</p>
+          </div>
+          <div class="option flex flex-row items-center">
+            <input
+              type="radio"
+              :name="`answer-for-${index + 1} question`"
+              :value="question.optionC"
+              v-model="pupilAnswers[index].pupilAnswer"
+              @change="changePupilAnswer(index, question.optionC)"
+              :checked="question.optionC === pupilAnswers[index].pupilAnswer"
+            />
+            <p class="ml-2">{{ question.optionC }}</p>
+          </div>
+          <div class="option flex flex-row items-center">
+            <input
+              type="radio"
+              :name="`answer-for-${index + 1} question`"
+              :value="question.optionD"
+              v-model="pupilAnswers[index].pupilAnswer"
+              @change="changePupilAnswer(index, question.optionD)"
+              :checked="question.optionD === pupilAnswers[index].pupilAnswer"
+            />
+            <p class="ml-2">{{ question.optionD }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      @click="leaveExam()"
+      class="btn bg-red text-white rounded px-3 py-2"
+    >
+      Chiqish
+    </button>
   </div>
 </template>
 
 <script>
-import { onBeforeMount, onBeforeUnmount, onMounted, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
+import { onBeforeMount, onMounted, reactive, ref, watch } from "vue";
 import { api } from "../plugins/api";
 import Cookie from "js-cookie";
 import { convertMsToTime } from "@/utils/convertMsToTime";
@@ -48,11 +114,13 @@ export default {
     let exam = reactive(JSON.parse(Cookie.get("exam")));
     let user = JSON.parse(Cookie.get("user"));
 
-    let pupilAnswers = reactive([]);
+    let pupilAnswers = reactive(JSON.parse(Cookie.get("pupilAnswers")));
 
     let topBtnVisible = ref(false);
     let scTimer = ref(0);
     let scY = ref(0);
+
+    let loading = ref(false);
 
     const checkExam = () => {
       api.get(`/exams/available/${props.id}`).then((res) => {
@@ -61,6 +129,7 @@ export default {
         } else {
           Cookie.remove("exam");
           Cookie.remove("exam_token");
+          Cookie.remove("pupilAnswers");
           window.location.href = "/discover";
         }
       });
@@ -86,6 +155,7 @@ export default {
           });
           Cookie.remove("exam");
           Cookie.remove("exam_token");
+          Cookie.remove("pupilAnswers");
           window.location.href = "/discover";
         } else {
           console.log(res.data.msg);
@@ -99,9 +169,11 @@ export default {
       });
     };
     const getExam = async () => {
+      loading.value = true;
       api.get(`/exams/${props.id}`).then((res) => {
         Cookie.remove("exam");
         Cookie.set("exam", JSON.stringify(res.data));
+        loading.value = false;
       });
     };
     const calculateTime = async () => {
@@ -113,32 +185,25 @@ export default {
         }
       }, 1000);
     };
+
     const toTop = () => {
       window.scrollTo({
         top: 0,
         behavior: "smooth",
       });
     };
-    const generateUserAnswers = () => {
-      for (let i = 0; i < exam.examQuestions.length; i++) {
-        pupilAnswers.push({
-          questionId: exam.examQuestions[i + 1],
-          question: exam.examQuestions[i].question,
-          answer: "",
-          examId: exam.examId,
-          pupilId: user.oneId,
-        });
-      }
+
+    const changePupilAnswer = (index, answer) => {
+      pupilAnswers[index].pupilAnswer = answer;
+      Cookie.set("pupilAnswers", JSON.stringify(pupilAnswers));
     };
 
-    onBeforeMount(() => {
+    onMounted(() => {
       calculateTime();
       window.addEventListener("scroll", handleScroll);
       getExam();
       checkExam();
       getUser();
-      generateUserAnswers();
-      console.log(pupilAnswers);
     });
 
     return {
@@ -149,6 +214,10 @@ export default {
       toTop,
       convertMsToTime,
       user,
+      getExam,
+      loading,
+      pupilAnswers,
+      changePupilAnswer,
     };
   },
 };

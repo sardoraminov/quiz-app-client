@@ -49,6 +49,8 @@ router.beforeEach((to, from, next) => {
     if (!Cookie.get("auth_token")) {
       router.push({ name: "login" });
     } else if (!Cookie.get("exam")) {
+      Cookie.remove('pupilAnswers');
+      Cookie.remove('exam_token');
       router.push({ name: "discover" });
     } else {
       next();

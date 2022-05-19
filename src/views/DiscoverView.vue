@@ -138,6 +138,18 @@ export default {
           console.log(res.data);
           Cookie.set("exam", JSON.stringify(res.data));
           Cookie.set("exam_token", res.data.exam_token);
+          let pupilAnswers = [];
+          res.data.examQuestions.forEach((question, i) => {
+            pupilAnswers.push({
+              questionIndex: i,
+              questionTitle: question.question,
+              correctAnswer: question.answer,
+              pupilAnswer: "",
+              userId: user.oneId,
+              examId: res.data.examId,
+            });
+          });
+          Cookie.set("pupilAnswers", JSON.stringify(pupilAnswers));
           api
             .put(`/users/${user.oneId}/active`, {
               examName: `${res.data.examName}`,
