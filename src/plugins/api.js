@@ -6,5 +6,3 @@ export const api = axios.create({
       ? "http://localhost:5000/"
       : "https://quizapp-server.herokuapp.com/",
 });
-
-console.log(axios.defaults.baseURL);

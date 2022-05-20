@@ -79,7 +79,7 @@
                   <button
                     @click="enterExam(exam.oneId)"
                     :disabled="disableBtn"
-                    class="enter-exam btn bg-blue text-white mt-2 rounded px-3 py-2 font-bold transition hover:shadow-lg"
+                    class="enter-exam btn bg-blue text-white mt-2 rounded px-3 py-2 font-bold transition hover:shadow-lg disabled:bg-gray"
                   >
                     Kirish
                   </button>
@@ -122,6 +122,22 @@ export default {
       store.dispatch("fetchExams").then(() => {
         loading.value = false;
         exams = store.state.exams;
+      });
+    };
+
+    const checkUser = async () => {
+      api.get(`/users/available/${user.oneId}`).then((res) => {
+        if (res.data.status === "ok") {
+          return;
+        } else {
+          Cookie.remove("user");
+          Cookie.remove("auth_token");
+          Cookie.remove("user_oneId");
+          Cookie.remove("exam");
+          Cookie.remove("exam_token");
+          Cookie.remove("pupilAnswers");
+          window.location.href = "/";
+        }
       });
     };
 
@@ -191,6 +207,7 @@ export default {
       getExams();
       calculateTime();
       getUser();
+      checkUser();
     });
 
     let filteredList = computed(() => {
