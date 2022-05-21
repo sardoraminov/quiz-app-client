@@ -123,7 +123,7 @@
         </p>
       </div>
     </div>
-    <footer class="authors bg-blue sm:py-0 py-3 text-center text-white">
+    <footer class="authors bg-blue py-3 text-center text-white">
       <p>
         Powered by
         <a
@@ -144,7 +144,11 @@
 </template>
 
 <script>
-import { onBeforeMount, onMounted, reactive, ref, watch } from "vue";
+import {
+  onMounted,
+  reactive,
+  ref,
+} from "vue";
 import { useRouter } from "vue-router";
 import { api } from "../plugins/api";
 import Cookie from "js-cookie";
@@ -309,7 +313,7 @@ export default {
       changePupilAnswer,
       disableBtn,
       saveResults,
-      reload
+      reload,
     };
   },
 };
