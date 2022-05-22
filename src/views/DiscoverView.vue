@@ -11,6 +11,7 @@
       <div class="names flex flex-col mb-3">
         <div class="id flex flex-row items-center mb-3">
           <p
+          @click="copy(user.oneId)"
             class="bg-white text-blue btn cursor-pointer rounded py-2 px-3 transition-all hover:shadow-lg"
           >
             {{ user.oneId }}
@@ -151,7 +152,6 @@ export default {
           },
         })
         .then((res) => {
-          console.log(res.data);
           Cookie.set("exam", JSON.stringify(res.data));
           Cookie.set("exam_token", res.data.exam_token);
           let pupilAnswers = [];
@@ -172,7 +172,6 @@ export default {
               examClassNum: res.data.examClassNum,
             })
             .then((res) => {
-              console.log(res.data);
               Cookie.remove("user");
 
               Cookie.set("user", JSON.stringify(res.data.user));
@@ -199,7 +198,6 @@ export default {
     const getUser = async () => {
       api.get(`/users/${user.oneId}`).then((res) => {
         Cookie.set("user", JSON.stringify(res.data));
-        console.log(res.data);
       });
     };
 

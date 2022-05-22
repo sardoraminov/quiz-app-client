@@ -1,32 +1,34 @@
 <template>
   <div>
-    <div class="exam-page mx-3">
-      <h1 class="exam-name mt-6 text-2xl font-bold">
-        {{ exam.examName }} {{ exam.examClassNum }}
-        <b class="opacity-70 text-base font-medium">({{ exam.examId }})</b>
-      </h1>
-      <div class="down flex flex-row items-center mt-3 mb-5">
-        <p class="exam-pupils flex flex-row items-center mr-5">
-          <ion-icon name="person-outline" class="mr-1"></ion-icon>
-          {{ exam.examPupils }}
-        </p>
-        <p class="exam-timeout flex flex-row items-center mr-2">
-          <ion-icon name="time-outline" class="mr-1"></ion-icon>
-          {{ convertMsToTime(exam.examTimeOut) }}
-        </p>
-      </div>
-      <button
-        :disabled="loading"
-        class="refresh-btn disabled:bg-gray btn text-white bg-blue rounded px-3 py-2 transition-all hover:shadow-lg mb-6"
-        @click="reload()"
-      >
-        {{ loading ? "" : "Yangilash" }}
-        <ion-icon name="refresh-outline" class="text-base"></ion-icon>
-      </button>
-      <div class="user mb-4">
-        <p>
-          Sizning ID: <b>{{ user.oneId }}</b>
-        </p>
+    <div class="exam-page mx-5">
+      <div class="top border border-gray rounded p-4 py-6 mt-4">
+        <h1 class="exam-name text-2xl font-bold">
+          {{ exam.examName }} {{ exam.examClassNum }}
+          <b class="opacity-70 text-base font-medium">({{ exam.examId }})</b>
+        </h1>
+        <div class="down flex flex-row items-center mt-3 mb-5">
+          <p class="exam-pupils flex flex-row items-center mr-5">
+            <ion-icon name="person-outline" class="mr-1"></ion-icon>
+            {{ exam.examPupils }}
+          </p>
+          <p class="exam-timeout flex flex-row items-center mr-2">
+            <ion-icon name="time-outline" class="mr-1"></ion-icon>
+            {{ convertMsToTime(exam.examTimeOut) }}
+          </p>
+        </div>
+        <div class="user">
+          <p>
+            Sizning ID: <b>{{ user.oneId }}</b>
+          </p>
+        </div>
+        <button
+          :disabled="loading"
+          class="refresh-btn disabled:bg-gray btn text-white bg-blue rounded px-3 py-2 transition-all hover:shadow-lg mt-3"
+          @click="reload()"
+        >
+          {{ loading ? "" : "Yangilash" }}
+          <ion-icon name="refresh-outline" class="text-base"></ion-icon>
+        </button>
       </div>
 
       <button
@@ -36,7 +38,7 @@
       >
         <ion-icon name="chevron-up-outline" class="mt-1 text-white"></ion-icon>
       </button>
-      <div class="exam-questions flex flex-col">
+      <div class="exam-questions sm:px-6 mt-5 flex flex-col">
         <h1 class="text-2xl font-bold mt-4">Savollar</h1>
         <div
           v-for="(question, index) in exam.examQuestions"
@@ -46,50 +48,74 @@
           <h2 class="question-title text-xl mb-4">
             <b>{{ index + 1 }}.</b> {{ question.question }}
           </h2>
-          <div class="exam-options space-y-3 flex flex-col items-start">
-            <div class="option flex flex-row items-center">
+          <div class="exam-options space-y-3 flex flex-col">
+            <div class="option relative w-full">
               <input
+                class="absolute hidden"
                 type="radio"
                 :name="`answer-for-${index + 1} question`"
                 :value="question.optionA"
                 v-model="pupilAnswers[index].pupilAnswer"
                 @change="changePupilAnswer(index, question.optionA)"
                 :checked="question.optionA === pupilAnswers[index].pupilAnswer"
+                :id="`${question.optionA}-${index + 1}`"
               />
-              <p class="ml-2">{{ question.optionA }}</p>
+              <label
+                class="z-20 block cursor-pointer w-full p-4 hover:bg-slate-100 transition-all"
+                :for="`${question.optionA}-${index + 1}`"
+                >{{ question.optionA }}</label
+              >
             </div>
-            <div class="option flex flex-row items-center">
+            <div class="option relative w-full">
               <input
+                class="absolute hidden"
                 type="radio"
                 :name="`answer-for-${index + 1} question`"
                 :value="question.optionB"
                 v-model="pupilAnswers[index].pupilAnswer"
                 @change="changePupilAnswer(index, question.optionB)"
                 :checked="question.optionB === pupilAnswers[index].pupilAnswer"
+                :id="`${question.optionB}-${index + 1}`"
               />
-              <p class="ml-2">{{ question.optionB }}</p>
+              <label
+                class="z-20 block cursor-pointer w-full p-4 hover:bg-slate-100 transition-all"
+                :for="`${question.optionB}-${index + 1}`"
+                >{{ question.optionB }}</label
+              >
             </div>
-            <div class="option flex flex-row items-center">
+            <div class="option relative w-full">
               <input
+                class="absolute hidden"
                 type="radio"
                 :name="`answer-for-${index + 1} question`"
                 :value="question.optionC"
                 v-model="pupilAnswers[index].pupilAnswer"
                 @change="changePupilAnswer(index, question.optionC)"
                 :checked="question.optionC === pupilAnswers[index].pupilAnswer"
+                :id="`${question.optionC}-${index + 1}`"
               />
-              <p class="ml-2">{{ question.optionC }}</p>
+              <label
+                :for="`${question.optionC}-${index + 1}`"
+                class="z-20 block  hover:bg-slate-100 transition-all cursor-pointer w-full p-4"
+                >{{ question.optionC }}</label
+              >
             </div>
-            <div class="option flex flex-row items-center">
+            <div class="option relative w-full">
               <input
+                class="absolute hidden"
                 type="radio"
                 :name="`answer-for-${index + 1} question`"
                 :value="question.optionD"
                 v-model="pupilAnswers[index].pupilAnswer"
                 @change="changePupilAnswer(index, question.optionD)"
                 :checked="question.optionD === pupilAnswers[index].pupilAnswer"
+                :id="`${question.optionD}-${index + 1}`"
               />
-              <p class="ml-2">{{ question.optionD }}</p>
+              <label
+                :for="`${question.optionD}-${index + 1}`"
+                class="z-20 block cursor-pointer w-full p-4 hover:bg-slate-100 transition-all"
+                >{{ question.optionD }}</label
+              >
             </div>
           </div>
         </div>
@@ -144,11 +170,7 @@
 </template>
 
 <script>
-import {
-  onMounted,
-  reactive,
-  ref,
-} from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { api } from "../plugins/api";
 import Cookie from "js-cookie";
@@ -218,7 +240,7 @@ export default {
     const saveResults = async (id) => {
       disableBtn.value = true;
       api
-        .post(`/exams/save_results/${id}`, { pupilAnswers, userId: user.oneId })
+        .post(`/exams/save_results/${id}`, { pupilAnswers, pupil: user.fullname, userId: user.oneId })
         .then((res) => {
           if (res.data.result) {
             Cookie.remove("exam");
@@ -282,6 +304,16 @@ export default {
       pupilAnswers[index].pupilAnswer = answer;
       Cookie.set("pupilAnswers", JSON.stringify(pupilAnswers));
     };
+
+    watch(
+      () => exam.examTimeOut,
+      () => {
+        if (exam.examTimeOut === 0 || exam.examTimeOut < 0) {
+          exam.finished = true;
+          leaveExam();
+        }
+      }
+    );
 
     onMounted(() => {
       calculateTime();
