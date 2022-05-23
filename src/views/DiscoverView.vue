@@ -107,6 +107,7 @@ import TimeIco from "@/assets/time.svg";
 export default {
   name: "Discover",
   setup() {
+    document.title = 'Discover | @dasturchioka'
     const store = useStore();
     const router = useRouter();
 

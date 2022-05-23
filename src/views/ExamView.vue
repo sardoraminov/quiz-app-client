@@ -179,10 +179,11 @@ export default {
   name: "exam",
   props: ["id"],
   setup(props) {
-    let router = useRouter();
-
+    
     let exam = reactive(JSON.parse(Cookie.get("exam")));
     let user = JSON.parse(Cookie.get("user"));
+
+    document.title = `Imtihon - ${exam.examName}`;
 
     let pupilAnswers = reactive(JSON.parse(Cookie.get("pupilAnswers")));
 
