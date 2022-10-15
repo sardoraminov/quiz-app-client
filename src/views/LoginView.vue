@@ -24,10 +24,7 @@
       </button>
     </div>
     <div class="authors mt-4">
-      <a href="https://instagram.com" class="mr-1"
-        ><span class="text-blue font-bold">@</span> livecoders</a
-      >
-      |
+      
       <a href="https://dasturchioka.uz" target="_blank" class="ml-1"
         ><span class="text-blue font-bold">@</span> dasturchioka</a
       >
