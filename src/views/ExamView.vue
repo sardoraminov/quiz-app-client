@@ -172,7 +172,7 @@
 <script>
 import { onMounted, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { api } from "../plugins/api";
+import { api } from "../http/api";
 import Cookie from "js-cookie";
 import { convertMsToTime } from "@/utils/convertMsToTime";
 export default {

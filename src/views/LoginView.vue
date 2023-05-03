@@ -2,6 +2,7 @@
   <div
     class="login-page min-h-screen flex flex-col justify-center items-center"
   >
+  <p class="mb-3">Test uchun ID: <b>32350334</b></p>
     <div
       class="login-box flex flex-col text-center border-2 border-gray px-6 py-3"
     >
@@ -34,7 +35,7 @@
 
 <script>
 import { reactive, ref } from "vue";
-import { api } from "@/plugins/api";
+import { api } from "@/http/api";
 import Cookie from "js-cookie";
 import { useRouter } from "vue-router";
 export default {

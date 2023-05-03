@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { api } from "../plugins/api";
+import { api } from "../http/api";
 import Cookies from "js-cookie";
 
 export default createStore({

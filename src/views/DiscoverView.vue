@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import { api } from "../plugins/api";
+import { api } from "../http/api";
 import { ref, reactive, onBeforeMount, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
